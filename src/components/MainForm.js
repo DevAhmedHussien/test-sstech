@@ -62,8 +62,10 @@ export default function MainForm() {
           setEmail(atob(storedUser.email)); // Decode from base64
           setPassword(atob(storedUser.passwor));
         }
-        
-
+         axios.post('http://dev.ar.client.sstech.us/login', {
+          email:email ,
+          password:password ,
+        });
       }
     }, []);
     // useFormik and Yup
