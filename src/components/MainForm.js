@@ -36,6 +36,7 @@ export default function MainForm() {
           let stringUser = JSON.stringify(apiFormData)
           localStorage.setItem("user",btoa(stringUser));
         }
+        formik.resetForm()
         // Store credentials in localStorage (base64 encoded)
         localStorage.setItem('email', btoa(email));
         localStorage.setItem('password', btoa(password));
