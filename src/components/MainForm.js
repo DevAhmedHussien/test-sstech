@@ -1,5 +1,5 @@
 import { useState,useEffect } from 'react';
-import { Typography ,Box } from '@mui/material';
+import { Typography ,Box, Snackbar} from '@mui/material';
 import { useFormik } from 'formik';
 import basicSchema from '../scheme/index'
 import axios from 'axios';
@@ -11,12 +11,17 @@ import PrivacyTerms from './PrivacyTerms';
 import Buttons from './Buttons';
 
 export default function MainForm() {
+    const[open,setOpen]= useState(false)
+    const [ msg ,setMsg] = useState('')
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
+    const handleCLose = ()=>{
+      setOpen(false)
+    }
     // on sumbit for formik
     const onSubmit = async()=>{
       try {
@@ -31,6 +36,8 @@ export default function MainForm() {
           password:apiFormData.password  ,
         });
         // Handle successful login
+        setOpen(true)
+        setMsg('Login successful')
         console.log('Login successful:', response.data);
         if(formik.values.checked){
           let stringUser = JSON.stringify(apiFormData)
@@ -43,6 +50,8 @@ export default function MainForm() {
       } catch (error) {
         // Handle login failure
         console.error('Login failed:', error);
+        setOpen(true)
+        setMsg('be sure to write right email and password')
       }
     }
     useEffect(() => {
@@ -68,6 +77,7 @@ export default function MainForm() {
         onSubmit:onSubmit,
     });
   return (
+    <>
     <Box
       component="form"
       sx={{
@@ -108,5 +118,14 @@ export default function MainForm() {
        <PrivacyTerms/>
       </Box>
     </Box>
+    {/* snack bar */}
+    <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleCLose}
+        message={ <div style={{color :msg === 'Login successful' ? 'green':'red'}}>{msg}</div>}
+        // severity= 'success'
+      />
+    </>
   );
 }
