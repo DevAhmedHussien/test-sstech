@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-const passwordRules = /d/
+const passwordRules = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
  const basicScheme = yup.object().shape({
     email:yup.string().email("please enter email").required('Required*'),

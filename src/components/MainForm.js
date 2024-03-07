@@ -1,13 +1,14 @@
 import { useState,useEffect } from 'react';
-import { Typography ,TextField,Box,Button  ,IconButton, InputAdornment, } from '@mui/material';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Typography ,Box } from '@mui/material';
 import { useFormik } from 'formik';
 import basicSchema from '../scheme/index'
 import axios from 'axios';
-import i from '../images/Screenshot_1.png'
 import bImage from '../images/abstract-dark-blue-futuristic-digital-grid-background.jpg'
+import HeaderForm from './HeaderForm';
+import TextFieldsForm from './TextField';
+import RememberMe from './RememberMe';
+import PrivacyTerms from './PrivacyTerms';
+import Buttons from './Buttons';
 
 export default function MainForm() {
     const [email, setEmail] = useState('');
@@ -89,98 +90,21 @@ export default function MainForm() {
         boxShadow: '1px 2px 20px rgb(145, 151, 189)',
         borderRadius:4,
       }}>
-        <Box
-          sx={{
-            display:'flex',
-            justifyContent:'center',
-            alignItems:'center',
-            gap:1,
-          }}>
-          <img src={i} alt='i' style={{width:'50px',height:'50px'}} />
-          <Typography variant='h3' sx={{textAlign:'center'}}>Test-Sstech</Typography>
-        </Box>
+        <HeaderForm/>
         <Typography variant='h4' sx={{textAlign:'center'}}>Login</Typography>
         <hr style={{width:'30%',marginTop:-5,marginBottom:30}}/>
-        <TextField 
-        variant="standard"
+        <TextFieldsForm formik={formik} showPassword={showPassword} handleClickShowPassword={handleClickShowPassword}/>
+        <RememberMe formik={formik}/>
+        <Buttons/>
+        <Typography variant='p' 
         sx={{
-          input: { color: 'white' },'& .MuiInput-underline:before': { borderBottomColor: formik.errors.email?'red':''},}}
-          id="outlined-multiline-flexible"
-          label="E-mail"
-        type='email' name='email'
-          value={formik.values.email}
-          onChange={formik.handleChange}
-        />
-        {formik.errors.email ?
-        <Typography variant='p' sx={{mt:'-10px',fontSize:14, color:'red'}}>{formik.errors.email}</Typography>
-        :
-        null
-        }
-          <TextField 
-
-            variant="standard"
-            sx={{input: { color: 'white' },'& .MuiInput-underline:before': { borderBottomColor: formik.errors.password?'red':''},}}x
-            id="outlined-multiline-flexible"
-            label="Password"
-            type={showPassword ? "text" : "password"}
-             name='password'
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-            InputProps={{
-                endAdornment: (
-                <InputAdornment position="end">
-                    <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                </InputAdornment>
-                ),
-            }}
-        />
-         {formik.errors.password ?
-        <Typography variant='p' sx={{mt:'-10px',fontSize:14,color:'red'}}>{formik.errors.password} </Typography>
-        :
-        null
-        }
-        <Box sx={{
-        display:'flex',justifyContent:'space-between',alignItems:"center",
-        }}>
-            <FormControlLabel 
-            id='checked'
-            label={
-              <Box component="div" fontSize={14}>
-                 Remember me
-               </Box>
-               }
-            value={formik.values.Checkbox}
-            onChange={formik.handleChange}
-            name='checked'
-            type='checkbox'
-            data-indeterminate="false"
-            control={<Checkbox />}  />
-            <Typography variant='p' 
-            sx={{fontSize:14,textDecoration:'underline',cursor:'pointer'}}>forget Me</Typography>
-        </Box>
-        <Box sx={{ mt:3,display:'flex',flexDirection:'column',alignItems:'center',gap:1}}>
-          <Button variant="contained" type='sumbit' sx={{width:'70%'}}>Login</Button>
-          <Button variant="" type='sumbit'sx={{width:'70%'}} >Sign up</Button>
-        </Box>
-        <Typography variant='p' sx={{
             textAlign:'center', fontSize:14,
             width:'100%'}} 
-          >Copytight 0 2019 Test-Sstech, UC. ScedBred™is a
+          >
+            Copytight 0 2019 Test-Sstech, UC. ScedBred™is a
             trademark of Test-Sstech, LLC.
         </Typography>
-        <Box sx={{ mt:3,display:'flex',justifyContent:'center',alignItems:'center',gap:2}}>
-          <Typography variant="contained" type='sumbit' 
-          sx={{width:'70%',textAlign:'center',textDecoration:'underline'}}>Terms of Services</Typography>
-            |
-          <Typography variant="" type='sumbit'
-          sx={{width:'70%',textAlign:'center',textDecoration:'underline'}} >Privacy Policy</Typography>
-        </Box>
+       <PrivacyTerms/>
       </Box>
     </Box>
   );
