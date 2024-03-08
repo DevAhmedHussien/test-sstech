@@ -13,7 +13,7 @@ import Buttons from './Buttons';
 export default function MainForm() {
     const[open,setOpen]= useState(false)
     const [ msg ,setMsg] = useState('')
-    const [email, setEmail] = useState('');
+    const [Username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => {
@@ -22,19 +22,28 @@ export default function MainForm() {
     const handleCLose = ()=>{
       setOpen(false)
     }
+    // Set the Content-Type header to application/json
+    const config = {
+      headers: {
+          'Content-Type': 'application/json',
+      },
+    };
     // on sumbit for formik
     const onSubmit = async()=>{
       try {
         const apiFormData = {
-          email: formik.values.email,
+          Username: formik.values.email,
           password: formik.values.password,
-          Checkbox:false
+          // Checkbox:false
       }
         // Make API call using axios
-        const response = await axios.post('http://dev.ar.client.sstech.us/login', {
-          email:apiFormData.email ,
-          password:apiFormData.password  ,
-        });
+        const response = await axios.post('http://dev.ar.client.sstech.us:8080/api/Auth/login', 
+        {
+          Username:apiFormData.Username ,
+          password:apiFormData.password,
+        },
+        config
+        );
         // Handle successful login
         setOpen(true)
         setMsg('Login successful')
@@ -45,13 +54,31 @@ export default function MainForm() {
         }
         formik.resetForm()
         // Store credentials in localStorage (base64 encoded)
-        localStorage.setItem('email', btoa(email));
+        localStorage.setItem('email', btoa(Username));
         localStorage.setItem('password', btoa(password));
       } catch (error) {
         // Handle login failure
         console.error('Login failed:', error);
         setOpen(true)
         setMsg('be sure to write right email and password')
+        console.error('Error Status:', error.response.status);
+        console.error('Error Message:', error.response.data.Message);
+      }
+    }
+    // quick login 
+    const handleLoginAccess = async ()=>{
+      try {
+        // Make API call using axios
+        const response = await axios.post('http://dev.ar.client.sstech.us:8080/api/Auth/login', {
+          Username ,
+          password,
+        },
+        );
+      console.log('Login successful:', response.data);
+      formik.resetForm()
+      } catch (error) {
+        // Handle login failure
+        console.error('Login failed:', error);
       }
     }
     useEffect(() => {
@@ -59,13 +86,10 @@ export default function MainForm() {
       if(localStorage.getItem('user')!== null){
         const storedUser = localStorage.getItem('user');
         if (storedUser.email && storedUser.password) {
-          setEmail(atob(storedUser.email)); // Decode from base64
+          setUsername(atob(storedUser.email)); // Decode from base64
           setPassword(atob(storedUser.passwor));
         }
-         axios.post('http://dev.ar.client.sstech.us/login', {
-          email:email ,
-          password:password ,
-        });
+        handleLoginAccess()
       }
     }, []);
     // useFormik and Yup
