@@ -1,124 +1,32 @@
-import { useState,useEffect } from 'react';
+import {useContext } from 'react';
 import { Typography ,Box, Snackbar} from '@mui/material';
-import { useFormik } from 'formik';
-import basicSchema from '../scheme/index'
-import axios from 'axios';
 import bImage from '../images/abstract-dark-blue-futuristic-digital-grid-background.jpg'
 import HeaderForm from './HeaderForm';
 import TextFieldsForm from './TextField';
 import RememberMe from './RememberMe';
 import PrivacyTerms from './PrivacyTerms';
 import Buttons from './Buttons';
+import MyContext from '../Context/Context';
 
 export default function MainForm() {
-    const[open,setOpen]= useState(false)
-    const [ msg ,setMsg] = useState('')
-    const [Username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-    const handleCLose = ()=>{
-      setOpen(false)
-    }
-    // Set the Content-Type header to application/json
-    const config = {
-      headers: {
-          'Content-Type': 'application/json',
-      },
-    };
-    // on sumbit for formik
-    const onSubmit = async()=>{
-      try {
-        const apiFormData = {
-          Username: formik.values.email,
-          password: formik.values.password,
-          // Checkbox:false
-      }
-        // Make API call using axios
-        const response = await axios.post('http://dev.ar.client.sstech.us:8080/api/Auth/login', 
-        {
-          Username:apiFormData.Username ,
-          password:apiFormData.password,
-        },
-        config
-        );
-        // Handle successful login
-        setOpen(true)
-        setMsg('Login successful')
-        console.log('Login successful:', response.data);
-        if(formik.values.checked){
-          let stringUser = JSON.stringify(apiFormData)
-          localStorage.setItem("user",btoa(stringUser));
-        }
-        formik.resetForm()
-        // Store credentials in localStorage (base64 encoded)
-        localStorage.setItem('email', btoa(Username));
-        localStorage.setItem('password', btoa(password));
-      } catch (error) {
-        // Handle login failure
-        console.error('Login failed:', error);
-        setOpen(true)
-        setMsg('be sure to write right email and password')
-        console.error('Error Status:', error.response.status);
-        console.error('Error Message:', error.response.data.Message);
-      }
-    }
-    // quick login 
-    const handleLoginAccess = async ()=>{
-      try {
-        // Make API call using axios
-        const response = await axios.post('http://dev.ar.client.sstech.us:8080/api/Auth/login', {
-          Username ,
-          password,
-        },
-        );
-      console.log('Login successful:', response.data);
-      formik.resetForm()
-      } catch (error) {
-        // Handle login failure
-        console.error('Login failed:', error);
-      }
-    }
-    useEffect(() => {
-      // Check if credentials are stored in localStorage
-      if(localStorage.getItem('user')!== null){
-        const storedUser = localStorage.getItem('user');
-        if (storedUser.email && storedUser.password) {
-          setUsername(atob(storedUser.email)); // Decode from base64
-          setPassword(atob(storedUser.passwor));
-        }
-        handleLoginAccess()
-      }
-    }, []);
-    // useFormik and Yup
-    const formik = useFormik({
-        initialValues: { 
-        email:"",
-        password:"",
-        checked:false
-        },
-        validationSchema: basicSchema,
-        onSubmit:onSubmit,
-    });
+    const { formik,open,msg,showPassword,handleCLose,handleClickShowPassword} = useContext(MyContext);
   return (
     <>
     <Box
-      component="form"
+      component="div"
       sx={{
+        height:'100vh',
         display:'flex',justifyContent:'center',alignItems:"center",
         backgroundImage: `url(${bImage})`,
         backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
+        backgroundRepeat: "no-repeat",
       }}
-      onSubmit={formik.handleSubmit}
     >
-      <Box component="div" 
+      <Box component="form" 
       sx={{
         width:'30vw',
         p:3,
-        border:formik.errors.email ||formik.errors.password ?'1px solid red':'1px solid blue',
+        border:formik.errors.email ||formik.errors.password || msg === 'be sure to write right email and password'?'1px solid red':'1px solid blue',
         m:'100px auto',
         display:'flex',
         flexDirection:'column',
@@ -126,7 +34,9 @@ export default function MainForm() {
         gap:2,
         boxShadow: '1px 2px 20px rgb(145, 151, 189)',
         borderRadius:4,
-      }}>
+      }}
+      onSubmit={formik.handleSubmit}
+      >
         <HeaderForm/>
         <Typography variant='h4' sx={{textAlign:'center'}}>Login</Typography>
         <hr style={{width:'30%',marginTop:-5,marginBottom:30}}/>
@@ -138,7 +48,7 @@ export default function MainForm() {
             textAlign:'center', fontSize:14,
             width:'100%'}} 
           >
-            Copytight 0 2019 Test-Sstech, UC. ScedBred™is a
+            Copytight 0 2019 Test-Sstec h, UC. ScedBred™is a
             trademark of Test-Sstech, LLC.
         </Typography>
        <PrivacyTerms/>
