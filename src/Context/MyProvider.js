@@ -4,13 +4,11 @@ import axios from 'axios';
 import MyContext from '../Context/Context';
 import { useFormik } from 'formik';
 import basicSchema from '../scheme/index'
-
-
 const MyProvider = ({ children }) => {
     const[open,setOpen]= useState(false) //for Login Alert
     const [ msg ,setMsg] = useState('') // msg in Alert
-    const [Username, setUsername] = useState('');// email that i geet from local storage
-    const [password, setPassword] = useState(''); // password that i get from locl storage 
+    const [Username, setUsername] = useState("harendra.kumar@sstech.us");// email that i geet from local storage
+    const [password, setPassword] = useState("Welcome@123"); // password that i get from locl storage 
     const [showPassword, setShowPassword] = useState(false); // eye Icon to show pass
     // function to show password and disapear 
     const handleClickShowPassword = () => {
@@ -59,18 +57,19 @@ const MyProvider = ({ children }) => {
         }
     }
     // quick login 
-    const handleLoginAccess = async ()=>{
+    const handleLoginAccess = async (Username,password)=>{
       try {
         // Make API call using axios
         const response = await axios.post('http://dev.ar.client.sstech.us:8080/api/Auth/login', {
-          Username ,
-          password,
+          Username : Username ,
+          password : password,
         },
+        config
         );
-      console.log('Login successful:', response.data);
-      setOpen(true)
-        setMsg('be sure to write right email and password')
-      formik.resetForm()
+        console.log('Login successful:', response.data);
+        setOpen(true)
+        setMsg('Login successful')
+      // formik.resetForm()
       } catch (error) {
         // Handle login failure
         console.error('Login failed:', error);
@@ -78,19 +77,25 @@ const MyProvider = ({ children }) => {
         setMsg('be sure to write right email and password')
       }
     }
-    console.log('email',Username)
+    console.log('Username',Username)
     console.log('password',password)
 
     useEffect(() => {
       // Check if credentials are stored in localStorage
-      if(localStorage.getItem('email')!== null && localStorage.getItem('password')!== null ){
+      if(localStorage.getItem('email')!== null && 
+          localStorage.getItem('password')!== null ){
         const storedEmail = localStorage.getItem('email')
         const storedPassword = localStorage.getItem('password')
         if (storedEmail && storedPassword) {
           setUsername(atob(storedEmail)); // Decode from base64
           setPassword(atob(storedPassword));
         }
-        handleLoginAccess()
+        // setTimeout(()=>{
+        handleLoginAccess(Username,password)
+        // },5000)
+      }
+      else{
+        return null
       }
     }, []);
     // useFormik and Yup

@@ -7,10 +7,8 @@ import {useMode} from './Context/ThemeProvider';
 import './App.css';
 function App() {
 const [theme] = useMode();
-
   return (
-  <ThemeProvider  theme={theme}
-  >
+  <ThemeProvider  theme={theme}>
     <MyProvider>
       <div className="App">
         <MainForm/>
