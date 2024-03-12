@@ -38,7 +38,7 @@ export default function MainForm() {
       onSubmit={formik.handleSubmit}
       >
         <HeaderForm/>
-        <Typography variant='h4' sx={{textAlign:'center'}}>Login</Typography>
+        <Typography variant='h4' sx={{textAlign:'center'}}>Log In</Typography>
         <hr style={{width:'30%',marginTop:-5,marginBottom:30}}/>
         <TextFieldsForm formik={formik} showPassword={showPassword} handleClickShowPassword={handleClickShowPassword}/>
         <RememberMe formik={formik}/>

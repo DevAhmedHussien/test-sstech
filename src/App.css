@@ -1,3 +1,22 @@
 *{
     color:whitesmoke;
 }
+@font-face {
+    font-family: AhmedBold ;
+    src: url(../public/Font/Lora-SemiBold.ttf);
+    font-weight: 900;
+}@font-face {
+    font-family: AhmedBold ;
+    src: url(../public/Font/Lora-Bold.ttf);
+    font-weight: 600;
+}
+@font-face {
+    font-family: AhmedBold ;
+    src: url(../public/Font/Lora-Medium.ttf);
+    font-weight: normal;
+}
+@font-face {
+    font-family: AhmedBold ;
+    src: url(../public/Font/Lora-Regular.ttf);
+    font-weight: 300;
+}

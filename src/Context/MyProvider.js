@@ -36,30 +36,26 @@ const MyProvider = ({ children }) => {
         // Make API call using axios
         const response = await axios.post('http://dev.ar.client.sstech.us:8080/api/Auth/login', 
         {
-          Username:apiFormData.Username ,
+          Username:apiFormData.Username,
           password:apiFormData.password,
         },
         config
         );
         // Handle successful login
+        console.log(response)
         setOpen(true)
         setMsg('Login successful')
-        console.log('Login successful:', response.data);
+        // Store credentials in localStorage (base64 encoded)
         if(formik.values.checked){
-          let stringUser = JSON.stringify(apiFormData)
-          localStorage.setItem("user",btoa(stringUser));
+          localStorage.setItem('email', btoa(apiFormData.Username));
+          localStorage.setItem('password', btoa(apiFormData.password));
         }
         formik.resetForm()
-        // Store credentials in localStorage (base64 encoded)
-        localStorage.setItem('email', btoa(Username));
-        localStorage.setItem('password', btoa(password));
         } catch (error) {
         // Handle login failure
         console.error('Login failed:', error);
         setOpen(true)
         setMsg('be sure to write right email and password')
-        console.error('Error Status:', error.response.status);
-        console.error('Error Message:', error.response.data.Message);
         }
     }
     // quick login 
@@ -72,19 +68,27 @@ const MyProvider = ({ children }) => {
         },
         );
       console.log('Login successful:', response.data);
+      setOpen(true)
+        setMsg('be sure to write right email and password')
       formik.resetForm()
       } catch (error) {
         // Handle login failure
         console.error('Login failed:', error);
+        setOpen(true)
+        setMsg('be sure to write right email and password')
       }
     }
+    console.log('email',Username)
+    console.log('password',password)
+
     useEffect(() => {
       // Check if credentials are stored in localStorage
-      if(localStorage.getItem('user')!== null){
-        const storedUser = localStorage.getItem('user');
-        if (storedUser.email && storedUser.password) {
-          setUsername(atob(storedUser.email)); // Decode from base64
-          setPassword(atob(storedUser.passwor));
+      if(localStorage.getItem('email')!== null && localStorage.getItem('password')!== null ){
+        const storedEmail = localStorage.getItem('email')
+        const storedPassword = localStorage.getItem('password')
+        if (storedEmail && storedPassword) {
+          setUsername(atob(storedEmail)); // Decode from base64
+          setPassword(atob(storedPassword));
         }
         handleLoginAccess()
       }
